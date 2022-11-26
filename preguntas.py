@@ -55,23 +55,23 @@ def pregunta_01():
     """
     En esta función se realiza la carga de datos.
     """
-    # Lea el archivo `mushrooms.csv` y asignelo al DataFrame `df`
-    df = pd.read_csv("mushrooms.csv")
+    # Lea el archivo mushrooms.csv y asignelo al DataFrame df
+    df = pd.read_csv('mushrooms.csv')
 
-    # Remueva la columna `veil-type` del DataFrame `df`.
+    # Remueva la columna veil-type del DataFrame df.
     # Esta columna tiene un valor constante y no sirve para la detección de hongos.
-    df.pop("veil-type")
+    df.drop('veil_type', axis= 1, inplace = True)
 
-    # Asigne la columna `type` a la variable `y`.
-    y = df["type"]
+    # Asigne la columna type a la variable y.
+    y = df['type']
 
-    # Asigne una copia del dataframe `df` a la variable `X`.
+    # Asigne una copia del dataframe df a la variable X.
     X = df.copy()
 
-    # Remueva la columna `type` del DataFrame `X`.
-    X.pop("type")
+    # Remueva la columna type del DataFrame X.
+    X.drop('type', axis= 1, inplace = True)
 
-    # Retorne `X` y `y`
+    # Retorne X y y
     return X, y
 
 
@@ -83,7 +83,7 @@ def pregunta_02():
     # Importe train_test_split
     from sklearn.model_selection import train_test_split
 
-    # Cargue los datos de ejemplo y asigne los resultados a `X` y `y`.
+    # Cargue los datos de ejemplo y asigne los resultados a X y y.
     X, y = pregunta_01()
 
     # Divida los datos de entrenamiento y prueba. La semilla del generador de números
@@ -95,7 +95,7 @@ def pregunta_02():
         random_state=123,
     )
 
-    # Retorne `X_train`, `X_test`, `y_train` y `y_test`
+    # Retorne X_train, X_test, y_train y y_test
     return X_train, X_test, y_train, y_test
 
 
@@ -103,7 +103,7 @@ def pregunta_03():
     """
     Especificación y entrenamiento del modelo. En sklearn, el modelo de regresión
     logística (a diferencia del modelo implementado normalmente en estadística) tiene
-    un hiperparámetro de regularición llamado `Cs`. Consulte la documentación.
+    un hiperparámetro de regularición llamado Cs. Consulte la documentación.
     Para encontrar el valor óptimo de Cs se puede usar LogisticRegressionCV.
     Ya que las variables explicativas son literales, resulta más conveniente usar un
     pipeline.
@@ -117,19 +117,19 @@ def pregunta_03():
     from sklearn.pipeline import Pipeline
 
     # Cargue las variables.
-    X_train, X_test, y_train, y_test = pregunta_02()
+    X_train, _, y_train, _ = pregunta_02()
 
     # Cree un pipeline que contenga un estimador OneHotEncoder y un estimador
     # LogisticRegression con una regularización Cs=10
     pipeline = Pipeline(
         steps=[
             ("OneHotEncoder", OneHotEncoder()),
-            ("LogisticRegression", LogisticRegressionCV(Cs=10)),
+            ("LogisticRegressionCV", LogisticRegressionCV(Cs=10)),
         ],
     )
 
     # Entrene el pipeline con los datos de entrenamiento.
-    pipeline.fiy(X_train, y_train)
+    pipeline.fit(X_train, y_train)
 
     # Retorne el pipeline entrenado
     return pipeline
@@ -152,12 +152,12 @@ def pregunta_04():
     # Evalúe el pipeline con los datos de entrenamiento usando la matriz de confusion.
     cfm_train = confusion_matrix(
         y_true=y_train,
-        y_pred=pipeline.predict(X_train),
+        y_pred= pipeline.predict(X_train),
     )
 
     cfm_test = confusion_matrix(
         y_true=y_test,
-        y_pred=pipeline.predict(X_test) 
+        y_pred=pipeline.predict(X_test),
     )
 
     # Retorne la matriz de confusion de entrenamiento y prueba
